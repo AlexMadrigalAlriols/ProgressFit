@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('order')->default(1);
             $table->string('name');
             $table->text('description')->nullable();
-            $table->string('start_weight');
+            $table->float('start_weight')->default(0);
             $table->integer('num_reps')->default(4);
             $table->json('data')->nullable();
             $table->timestamps();

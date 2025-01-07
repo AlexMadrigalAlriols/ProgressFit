@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\ApiResponse;
-use App\Helpers\PaginationHelper;
+use App\Http\Requests\Workouts\StoreRequest;
+use App\Http\Requests\Workouts\UpdateRequest;
+use App\Http\Resources\WorkoutResource;
 use App\Models\Workout;
 use App\Models\WorkoutGroup;
+use App\UseCases\Workouts\StoreUseCase;
+use App\UseCases\Workouts\UpdateUseCase;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -14,26 +18,25 @@ class WorkoutController extends Controller
     public function index(Request $request, WorkoutGroup $workoutGroup) {
         $user = JWTAuth::parseToken()->authenticate();
 
-        $query = $workoutGroup->orderBy('order', 'desc');
-
-        $workoutGroups = $query->get();
+        $query = $workoutGroup->workouts()->orderBy('order', 'desc');
+        $workouts = $query->get();
 
         return ApiResponse::ok([
-            'workoutGroups' => Workout::collection($workoutGroups)
+            'workouts' => WorkoutResource::collection($workouts)
         ]);
     }
 
-    public function show(WorkoutGroup $workoutGroup) {
+    public function show(WorkoutGroup $workoutGroup, Workout $workout) {
         $user = JWTAuth::parseToken()->authenticate();
 
-        return ApiResponse::ok(new WorkoutGroupResource($workoutGroup));
+        return ApiResponse::ok(new WorkoutResource($workout));
     }
 
-    public function store(StoreRequest $request)
+    public function store(StoreRequest $request, WorkoutGroup $workoutGroup)
     {
         $user = JWTAuth::parseToken()->authenticate();
 
-        $workoutGroup = (new StoreUseCase(
+        $workout = (new StoreUseCase(
             $user,
             $request->input('name'),
             $request->input('weekday')
@@ -42,25 +45,25 @@ class WorkoutController extends Controller
         return ApiResponse::done('WorkoutGroup created successfully');
     }
 
-    public function update(UpdateRequest $request, WorkoutGroup $workoutGroup)
+    public function update(UpdateRequest $request, WorkoutGroup $workoutGroup, Workout $workout)
     {
         $user = JWTAuth::parseToken()->authenticate();
 
         (new UpdateUseCase(
-            $workoutGroup,
+            $workout,
             $user,
             $request->input('name'),
             $request->input('weekday')
         ))->action();
 
-        return ApiResponse::done('WorkoutGroup updated successfully');
+        return ApiResponse::done('Workout updated successfully');
     }
 
-    public function destroy(WorkoutGroup $workoutGroup)
+    public function destroy(WorkoutGroup $workoutGroup, Workout $workout)
     {
         $user = JWTAuth::parseToken()->authenticate();
-        $workoutGroup->delete();
+        $workout->delete();
 
-        return ApiResponse::done('WorkoutGroup deleted successfully');
+        return ApiResponse::done('Workout deleted successfully');
     }
 }
