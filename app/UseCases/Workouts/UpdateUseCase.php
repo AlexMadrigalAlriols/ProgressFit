@@ -11,18 +11,24 @@ class UpdateUseCase extends UseCase
 {
     public function __construct(
         protected Workout $workout,
-        protected User $user,
+        protected int $order,
         protected string $name,
-        protected string $weekday
+        protected string $description,
+        protected float $start_weight = 0,
+        protected int $num_reps = 0,
+        protected array $data = []
     ) {
     }
 
     public function action(): Workout
     {
         $this->workout->update([
+            'order' => $this->order,
             'name' => $this->name,
-            'weekday' => $this->weekday,
-            'user_id' => $this->user->id,
+            'description' => $this->description,
+            'start_weight' => $this->start_weight,
+            'num_reps' => $this->num_reps,
+            'data' => array_merge($this->workout->data, $this->data)
         ]);
 
         return $this->workout;

@@ -24,8 +24,11 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'order' => 'required|integer',
             'name' => 'required|string|max:40',
-            'weekday' => 'required|string|in:' . implode(',', WorkoutGroup::WEEKDAYS)
+            'description' => 'nullable|string|max:255',
+            'start_weight' => 'nullable|decimal',
+            'num_reps' => 'nullable|integer',
         ];
     }
 }

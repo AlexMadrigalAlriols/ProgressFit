@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\WorkoutController;
+use App\Http\Controllers\Api\WorkoutGroupController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,4 +21,7 @@ Route::post('login', [AuthController::class, 'login']);
 
 Route::middleware('jwt.auth')->group(function() {
     Route::get('user', [AuthController::class, 'getUser']);
+
+    Route::apiResource('workoutGroups', WorkoutGroupController::class);
+    Route::apiResource('{workoutGroup}/workouts', WorkoutController::class);
 });

@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Helpers\ApiResponse;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Workouts\StoreRequest;
 use App\Http\Requests\Workouts\UpdateRequest;
 use App\Http\Resources\WorkoutResource;
@@ -37,9 +38,13 @@ class WorkoutController extends Controller
         $user = JWTAuth::parseToken()->authenticate();
 
         $workout = (new StoreUseCase(
-            $user,
+            $workoutGroup,
+            $request->input('order') ?? 0,
             $request->input('name'),
-            $request->input('weekday')
+            $request->input('description'),
+            $request->input('start_weight'),
+            $request->input('num_reps'),
+            []
         ))->action();
 
         return ApiResponse::done('WorkoutGroup created successfully');
@@ -51,9 +56,12 @@ class WorkoutController extends Controller
 
         (new UpdateUseCase(
             $workout,
-            $user,
+            $request->input('order') ?? 0,
             $request->input('name'),
-            $request->input('weekday')
+            $request->input('description'),
+            $request->input('start_weight'),
+            $request->input('num_reps'),
+            []
         ))->action();
 
         return ApiResponse::done('Workout updated successfully');

@@ -39,6 +39,6 @@ class WorkoutGroup extends Model
 
     public function workouts(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(Workout::class);
+        return $this->hasMany(Workout::class)->orderBy('order', 'asc');
     }
 }

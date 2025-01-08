@@ -22,7 +22,11 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'order' => 'required|integer',
             'name' => 'required|string|max:40',
+            'description' => 'nullable|string|max:255',
+            'start_weight' => 'nullable|decimal',
+            'num_reps' => 'nullable|integer',
         ];
     }
 }

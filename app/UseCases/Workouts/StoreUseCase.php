@@ -2,7 +2,6 @@
 
 namespace App\UseCases\Workouts;
 
-use App\Models\User;
 use App\Models\Workout;
 use App\Models\WorkoutGroup;
 use App\UseCases\Core\UseCase;
@@ -28,7 +27,7 @@ class StoreUseCase extends UseCase
             'description' => $this->description,
             'start_weight' => $this->start_weight,
             'num_reps' => $this->num_reps,
-            'data' => $this->data,
+            'data' => $this->data
         ]);
 
         return $workout;

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Helpers\ApiResponse;
-use App\Helpers\PaginationHelper;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\WorkoutGroups\StoreRequest;
 use App\Http\Requests\WorkoutGroups\UpdateRequest;
 use App\Http\Resources\WorkoutGroupResource;
@@ -19,7 +19,7 @@ class WorkoutGroupController extends Controller
     public function index(Request $request) {
         $user = JWTAuth::parseToken()->authenticate();
 
-        $query = $user->workoutGroups()->orderBy('updated_at', 'desc');
+        $query = $user->workoutGroups();
 
         if(!$request->input('all', false)) {
             $weekday = Carbon::now()->format('l');
